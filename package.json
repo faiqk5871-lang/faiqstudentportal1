@@ -1,0 +1,13 @@
+{
+  "name": "student-portal",
+  "version": "1.0.0",
+  "description": "Student Portal Web Application",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "build": "echo 'No build step required for static frontend'"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
