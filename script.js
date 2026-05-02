@@ -48,17 +48,25 @@ const sampleWorkshops = [
 let currentUser = null;
 
 // Auth Section Functions
-function showLogin() {
+function showLogin(event) {
     document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        document.querySelector('.tab:first-child').classList.add('active');
+    }
     document.getElementById('loginForm').classList.add('active');
 }
 
-function showRegister() {
+function showRegister(event) {
     document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        document.querySelector('.tab:last-child').classList.add('active');
+    }
     document.getElementById('registerForm').classList.add('active');
 }
 

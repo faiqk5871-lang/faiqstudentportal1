@@ -4,51 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal - Official Login</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Login/Register Section -->
     <div id="authSection" class="auth-container">
-        <div class="auth-box">
-            <div class="auth-tabs">
-                <button class="tab active" onclick="showLogin()">Login</button>
-                <button class="tab" onclick="showRegister()">Register</button>
+        <div class="auth-wrapper">
+            <div class="auth-image">
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&h=600&fit=crop" alt="AI Learning" class="ai-illustration">
+                <div class="image-overlay">
+                    <h3>Welcome to Student Portal</h3>
+                    <p>Your AI-Powered Learning Platform</p>
+                </div>
             </div>
-            
-            <!-- Login Form -->
-            <form id="loginForm" class="auth-form active">
-                <h2>Welcome Back!</h2>
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="loginEmail" placeholder="Email" required>
+            <div class="auth-box">
+                <div class="auth-tabs">
+                    <button class="tab active" onclick="showLogin()">Login</button>
+                    <button class="tab" onclick="showRegister()">Register</button>
                 </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="loginPassword" placeholder="Password" required>
-                </div>
-                <button type="submit" class="btn-primary">Login</button>
-                <p id="loginMessage" class="message"></p>
-            </form>
+                
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form active">
+                    <h2>Welcome Back!</h2>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                    <p id="loginMessage" class="message"></p>
+                </form>
 
-            <!-- Register Form -->
-            <form id="registerForm" class="auth-form">
-                <h2>Create Account</h2>
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="regName" placeholder="Full Name" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="regEmail" placeholder="Email" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="regPassword" placeholder="Password" required>
-                </div>
-                <button type="submit" class="btn-primary">Register</button>
-                <p id="registerMessage" class="message"></p>
-            </form>
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form">
+                    <h2>Create Account</h2>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="regName" placeholder="Full Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="regEmail" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="regPassword" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Register</button>
+                    <p id="registerMessage" class="message"></p>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -59,7 +68,7 @@
                 <h1><i class="fas fa-graduation-cap"></i> Student Portal</h1>
                 <div class="user-info">
                     <span id="userName">Welcome, Student</span>
-                    <button class="btn-logout" onclick="logout()">
+<button class="btn-logout" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
@@ -78,7 +87,44 @@
         <section class="workshops-section">
             <h2><i class="fas fa-calendar-check"></i> Available Workshops</h2>
             <div class="workshops-grid" id="workshopsGrid">
-                <!-- Workshops will be loaded here -->
+                <!-- Workshop 1 -->
+                <div class="workshop-card">
+                    <div class="workshop-image">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=250&fit=crop" alt="AI Workshop">
+                    </div>
+                    <div class="workshop-content">
+                        <h3 class="workshop-title">AI & Machine Learning</h3>
+                        <p class="workshop-date"><i class="fas fa-calendar"></i> Every Saturday</p>
+                        <p class="workshop-fees">₹999</p>
+                        <button class="btn-apply" onclick="openApplyModal('1')">Apply Now</button>
+                    </div>
+                </div>
+                
+                <!-- Workshop 2 -->
+                <div class="workshop-card">
+                    <div class="workshop-image">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop" alt="Data Science">
+                    </div>
+                    <div class="workshop-content">
+                        <h3 class="workshop-title">Data Science Bootcamp</h3>
+                        <p class="workshop-date"><i class="fas fa-calendar"></i> Every Sunday</p>
+                        <p class="workshop-fees">₹1499</p>
+                        <button class="btn-apply" onclick="openApplyModal('2')">Apply Now</button>
+                    </div>
+                </div>
+                
+                <!-- Workshop 3 -->
+                <div class="workshop-card">
+                    <div class="workshop-image">
+                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop" alt="Web Development">
+                    </div>
+                    <div class="workshop-content">
+                        <h3 class="workshop-title">Web Development</h3>
+                        <p class="workshop-date"><i class="fas fa-calendar"></i> Mon, Wed, Fri</p>
+                        <p class="workshop-fees">₹799</p>
+                        <button class="btn-apply" onclick="openApplyModal('3')">Apply Now</button>
+                    </div>
+                </div>
             </div>
         </section>
 
