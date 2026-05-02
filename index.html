@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Official Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Login/Register Section -->
+    <div id="authSection" class="auth-container">
+        <div class="auth-box">
+            <div class="auth-tabs">
+                <button class="tab active" onclick="showLogin()">Login</button>
+                <button class="tab" onclick="showRegister()">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active">
+                <h2>Welcome Back!</h2>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+                <p id="loginMessage" class="message"></p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form">
+                <h2>Create Account</h2>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="regName" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="regEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="regPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+                <p id="registerMessage" class="message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Portal (Hidden Initially) -->
+    <div id="mainPortal" class="portal-container" style="display: none;">
+        <header class="portal-header">
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> Student Portal</h1>
+                <div class="user-info">
+                    <span id="userName">Welcome, Student</span>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section 1: Announcements -->
+        <section class="announcement-section">
+            <h2><i class="fas fa-bullhorn"></i> Announcements</h2>
+            <div class="announcement-list" id="announcementList">
+                <!-- Announcements will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Section 2: Workshops/Courses -->
+        <section class="workshops-section">
+            <h2><i class="fas fa-calendar-check"></i> Available Workshops</h2>
+            <div class="workshops-grid" id="workshopsGrid">
+                <!-- Workshops will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Section 3: Contact Us -->
+        <section class="contact-section">
+            <h2><i class="fas fa-phone"></i> Contact Us</h2>
+            <div class="contact-info">
+                <p><strong>Email:</strong> info@yourinstitute.com</p>
+                <p><strong>Phone:</strong> +123-456-7890</p>
+                <p><strong>Address:</strong> 123 Education Street, City, State</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Apply Form Modal -->
+    <div id="applyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeApplyModal()">&times;</span>
+            <h2>Apply for Workshop</h2>
+            <form id="applyForm">
+                <input type="hidden" id="selectedWorkshopId">
+                <div class="input-group">
+                    <label>Name</label>
+                    <input type="text" id="applyName" required>
+                </div>
+                <div class="input-group">
+                    <label>Father's Name</label>
+                    <input type="text" id="applyFatherName" required>
+                </div>
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="applyPhone" required>
+                </div>
+                <div class="input-group">
+                    <label>Gmail</label>
+                    <input type="email" id="applyEmail" required>
+                </div>
+                <div class="input-group">
+                    <label>Class</label>
+                    <input type="text" id="applyClass" required>
+                </div>
+                <div class="input-group">
+                    <label>Institute</label>
+                    <input type="text" id="applyInstitute" required>
+                </div>
+                <div class="input-group">
+                    <label>Payment Screenshot</label>
+                    <input type="file" id="paymentScreenshot" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn-primary">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
