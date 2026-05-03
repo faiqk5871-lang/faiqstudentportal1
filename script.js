@@ -17,31 +17,17 @@ const sampleAnnouncements = [
 const sampleWorkshops = [
     {
         id: 1,
-        title: "Advanced Python Programming",
-        date: "2024-02-10",
-        fees: "₹2500",
+        title: "Data Handling and Management",
+        date: "Coming Soon",
+        fees: "Rs4000",
         image: "🐍"
     },
     {
         id: 2,
-        title: "Web Development Bootcamp",
-        date: "2024-02-20",
-        fees: "₹3500",
+        title: "Basic Course",
+        date: "Coming Soon",
+        fees: "Rs2000",
         image: "🌐"
-    },
-    {
-        id: 3,
-        title: "Data Science Fundamentals",
-        date: "2024-03-05",
-        fees: "₹4000",
-        image: "📊"
-    },
-    {
-        id: 4,
-        title: "Digital Marketing Workshop",
-        date: "2024-03-15",
-        fees: "₹2000",
-        image: "📱"
     }
 ];
 
