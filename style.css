@@ -42,6 +42,19 @@ body {
     object-fit: cover;
 }
 
+.python-logo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
 .image-overlay {
     position: absolute;
     bottom: 0;
