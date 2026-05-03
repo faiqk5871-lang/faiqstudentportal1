@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal - Official Login</title>
 <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Login/Register Section -->
@@ -13,10 +14,11 @@
         <div class="auth-wrapper">
 <div class="auth-image">
                 <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&h=600&fit=crop" alt="AI Learning" class="ai-illustration">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/PyTorch_logo.png" alt="Python AI Logo" class="python-logo">
+
+
                 <div class="image-overlay">
                     <h3>Welcome to Student Portal</h3>
-                    <p>Your AI-Powered Learning Platform</p>
+                    <p>Boost your career</p>
                 </div>
             </div>
             <div class="auth-box">
@@ -65,8 +67,7 @@
     <!-- Main Portal (Hidden Initially) -->
     <div id="mainPortal" class="portal-container" style="display: none;">
         <header class="portal-header">
-            <div class="header-content">
-                <h1><i class="fas fa-graduation-cap"></i> Student Portal</h1>
+<div class="header-content">\n                <img src="images/panaflex.png" alt="Panaflex" class="panaflex-logo">\n                <h1><i class="fas fa-graduation-cap"></i> Student Portal</h1>
                 <div class="user-info">
                     <span id="userName">Welcome, Student</span>
 <button class="btn-logout" onclick="logout()">
@@ -78,17 +79,44 @@
 
         <!-- Section 1: Announcements -->
         <section class="announcement-section">
-            <h2><i class="fas fa-bullhorn"></i> Announcements</h2>
+            <h2><i class="fas fa-bullhorn"></i> Announcements <button class="btn-primary" style="font-size: 1rem; padding: 0.5rem 1rem; display: inline-flex; align-items: center; gap: 0.5rem; margin-left: 1rem;" onclick="openNotificationModal()">+ Add Notification</button></h2>
             <div class="announcement-list" id="announcementList">
                 <!-- Announcements will be loaded here -->
+            </div>
+            <!-- Notification Upload Modal -->
+            <div id="notificationModal" class="modal">
+                <div class="modal-content" style="background: var(--primary-gradient);">
+                    <span class="close" onclick="closeNotificationModal()">&times;</span>
+                    <h2>Add New Announcement</h2>
+                    <form id="notificationForm">
+                        <div class="input-group">
+                            <i class="fas fa-heading"></i>
+                            <label>Title</label>
+                            <input type="text" id="notifTitle" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-align-left"></i>
+                            <label>Description</label>
+                            <textarea id="notifDesc" rows="3" required></textarea>
+                        </div>
+                        <div class="upload-section">
+                            <label>🖼️ Upload Notification Image</label>
+                            <input type="file" id="notifImage" accept="image/*">
+                            <div id="notifImagePreview" class="image-preview"></div>
+                            <p class="upload-hint">Optional: Add image to your announcement</p>
+                        </div>
+                        <button type="submit" class="btn-primary">Publish Announcement</button>
+                    </form>
+                </div>
             </div>
         </section>
 
 <!-- Section 2: Workshops/Courses -->
         <section class="workshops-section">
             <h2><i class="fas fa-calendar-check"></i> Workshops</h2>
-            <div class="workshops-grid" id="workshopsGrid">
-<!-- Workshop 1: Data Handling and Management -->
+<div class="workshops-grid" id="workshopsGrid">
+
+                <!-- Workshop 1: Data Handling -->
                 <div class="workshop-card">
                     <div class="workshop-image">
                         <img src="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=400&h=250&fit=crop" alt="Data Handling">
@@ -148,32 +176,42 @@
             <form id="applyForm">
                 <input type="hidden" id="selectedWorkshopId">
                 <div class="input-group">
+                    <i class="fas fa-user"></i>
                     <label>Name</label>
                     <input type="text" id="applyName" required>
                 </div>
                 <div class="input-group">
+                    <i class="fas fa-user-friends"></i>
                     <label>Father's Name</label>
                     <input type="text" id="applyFatherName" required>
                 </div>
                 <div class="input-group">
+                    <i class="fas fa-phone"></i>
                     <label>Phone Number</label>
                     <input type="tel" id="applyPhone" required>
                 </div>
                 <div class="input-group">
-                    <label>Gmail</label>
+                    <i class="fas fa-envelope"></i>
+                    <label>Email</label>
                     <input type="email" id="applyEmail" required>
                 </div>
                 <div class="input-group">
+                    <i class="fas fa-graduation-cap"></i>
                     <label>Class</label>
                     <input type="text" id="applyClass" required>
                 </div>
                 <div class="input-group">
+                    <i class="fas fa-university"></i>
                     <label>Institute</label>
                     <input type="text" id="applyInstitute" required>
                 </div>
                 <div class="input-group">
-                    <label>Payment Screenshot</label>
+                <div class="upload-section">
+                    <label>📱 Upload Payment Receipt Screenshot <span class="required">(Required for Confirmation)</span></label>
                     <input type="file" id="paymentScreenshot" accept="image/*" required>
+                    <div id="imagePreview" class="image-preview"></div>
+                    <p class="upload-hint">Please upload your payment screenshot (JazzCash/EasyPaisa receipt)</p>
+                </div>
                 </div>
                 <button type="submit" class="btn-primary">Submit Application</button>
             </form>

@@ -1,74 +1,58 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const cors = require('cors');
 require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const sequelize = require('./config/database');
+const User = require('./models/User');
+const Application = require('./models/Application');
+const Announcement = require('./models/Announcement');
+const authRoutes = require('./routes/auth');
+const appRoutes = require('./routes/applications');
+const announcementRoutes = require('./routes/announcements');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '..'))); // Serve frontend files
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5000'], 
+  credentials: true
+}));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// In-memory storage (no MongoDB required)
-const users = [];
-const applications = [];
-
-// Multer for file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
-    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
-});
-const upload = multer({ storage });
+// Serve static files (uploads & frontend)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, '..'))); // Serve frontend
 
 // Routes
-app.post('/api/register', (req, res) => {
-    const { name, email, password } = req.body;
-    const existingUser = users.find(u => u.email === email);
-    if (existingUser) {
-        res.json({ success: false, message: 'Email already exists' });
-    } else {
-        users.push({ name, email, password, createdAt: new Date() });
-        res.json({ success: true, message: 'Registration successful!' });
-    }
-});
+app.use('/api', authRoutes);
+app.use('/api/applications', appRoutes);
+app.use('/api/announcements', announcementRoutes);
 
-app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-        res.json({ 
-            success: true, 
-            user: { name: user.name, email: user.email },
-            token: 'demo-jwt-token'
-        });
-    } else {
-        res.json({ success: false, message: 'Invalid credentials' });
-    }
-});
+// Health check
+app.get('/api/health', (req, res) => res.json({ success: true, message: 'Backend running' }));
 
-app.post('/api/applications', upload.single('paymentScreenshot'), (req, res) => {
-    const applicationData = {
-        workshopId: req.body.workshopId,
-        workshopTitle: req.body.workshopTitle || 'Unknown Workshop',
-        name: req.body.name,
-        fatherName: req.body.fatherName,
-        phone: req.body.phone,
-        email: req.body.email,
-        class: req.body.class,
-        institute: req.body.institute,
-        paymentScreenshot: req.file ? `/uploads/${req.file.filename}` : '',
-        userId: req.body.userId || 'demo-user',
-        status: 'Pending',
-        createdAt: new Date()
-    };
+// Sync DB and start server
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('SQLite connected successfully');
+    
+    // Sync models (force: false for dev)
+    await sequelize.sync({ alter: true });
+    console.log('Database synced');
+    
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT}`);
+      console.log(`Frontend: http://localhost:${PORT}`);
+      console.log(`API: http://localhost:${PORT}/api/health`);
+    });
+  } catch (error) {
+    console.error('Failed to start:', error);
+  }
+};
 
-    applications.push(applicationData);
-    res.json({ success: true, message: 'Application submitted successfully!' });
-});
+startServer();
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;

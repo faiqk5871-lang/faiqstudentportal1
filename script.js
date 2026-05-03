@@ -1,215 +1,273 @@
-// Sample data (replace with API calls)
-const sampleAnnouncements = [
-    {
-        id: 1,
-        title: "New Semester Registration Open!",
-        date: "2024-01-15",
-        image: "📢"
-    },
-    {
-        id: 2,
-        title: "Winter Workshop Series Announced",
-        date: "2024-01-12",
-        image: "❄️"
-    }
-];
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const authSection = document.getElementById('authSection');
+    const mainPortal = document.getElementById('mainPortal');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const registerMessage = document.getElementById('registerMessage');
+    const applyModal = document.getElementById('applyModal');
+    const userNameSpan = document.getElementById('userName');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const regName = document.getElementById('regName');
+    const regEmail = document.getElementById('regEmail');
+    const regPassword = document.getElementById('regPassword');
+    const applyForm = document.getElementById('applyForm');
 
-const sampleWorkshops = [
-    {
-        id: 1,
-        title: "Data Handling and Management",
-        date: "Coming Soon",
-        fees: "Rs4000",
-        image: "🐍"
-    },
-    {
-        id: 2,
-        title: "Basic Course",
-        date: "Coming Soon",
-        fees: "Rs2000",
-        image: "🌐"
-    }
-];
+    let currentUser = null;
+    const API_BASE = 'http://localhost:5000/api'; // Change for production
 
-let currentUser = null;
-
-// Auth Section Functions
-function showLogin(event) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-    if (event && event.target) {
+    // Tab switching
+    window.showLogin = function() {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
         event.target.classList.add('active');
-    } else {
-        document.querySelector('.tab:first-child').classList.add('active');
-    }
-    document.getElementById('loginForm').classList.add('active');
-}
+        loginForm.classList.add('active');
+    };
 
-function showRegister(event) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-    if (event && event.target) {
+    window.showRegister = function() {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
         event.target.classList.add('active');
-    } else {
-        document.querySelector('.tab:last-child').classList.add('active');
-    }
-    document.getElementById('registerForm').classList.add('active');
-}
+        registerForm.classList.add('active');
+    };
 
-// Login Form
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    
-    try {
-        // Replace with your backend API
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            currentUser = data.user;
-            showPortal();
-        } else {
-            showMessage('loginMessage', data.message, 'error');
+    // Register
+    registerForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const data = {
+            name: regName.value,
+            email: regEmail.value,
+            password: regPassword.value
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            registerMessage.textContent = result.message;
+            registerMessage.className = result.success ? 'message success' : 'message error';
+            if (result.success) {
+                setTimeout(() => showLogin(), 1500);
+            }
+        } catch (error) {
+            registerMessage.textContent = 'Registration failed. Using demo mode.';
+            registerMessage.className = 'message error';
         }
-    } catch (error) {
-        // Demo mode - use sample login
-        currentUser = { name: email.split('@')[0], email };
-        document.getElementById('userName').textContent = `Welcome, ${currentUser.name}`;
-        showPortal();
-    }
-});
+    });
 
-// Register Form
-document.getElementById('registerForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('regName').value;
-    const email = document.getElementById('regEmail').value;
-    const password = document.getElementById('regPassword').value;
-    
-    try {
-        // Replace with your backend API
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
-        });
-        
-        const data = await response.json();
-        showMessage('registerMessage', data.message, data.success ? 'success' : 'error');
-    } catch (error) {
-        showMessage('registerMessage', 'Demo registration successful!', 'success');
-        setTimeout(() => showLogin(), 1500);
-    }
-});
+    // Login (with demo fallback)
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const data = {
+            email: loginEmail.value,
+            password: loginPassword.value
+        };
 
-function showPortal() {
-    document.getElementById('authSection').style.display = 'none';
-    document.getElementById('mainPortal').style.display = 'block';
-    loadAnnouncements();
-    loadWorkshops();
-}
+        try {
+            const response = await fetch(`${API_BASE}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
 
-function logout() {
-    currentUser = null;
-    document.getElementById('mainPortal').style.display = 'none';
-    document.getElementById('authSection').style.display = 'flex';
-    document.getElementById('loginForm').reset();
-    document.getElementById('registerForm').reset();
-}
+            if (result.success) {
+                currentUser = result.user;
+                userNameSpan.textContent = `Welcome, ${currentUser.name}`;
+                authSection.style.display = 'none';
+                mainPortal.style.display = 'block';
+            } else {
+                loginMessage.textContent = result.message || 'Invalid credentials';
+                loginMessage.className = 'message error';
+            }
+        } catch (error) {
+            // Demo login fallback if backend not running
+            console.log('Backend not available, using demo login');
+            currentUser = { name: data.email.split('@')[0].charAt(0).toUpperCase() + data.email.split('@')[0].slice(1) };
+            userNameSpan.textContent = `Welcome, ${currentUser.name}`;
+            authSection.style.display = 'none';
+            mainPortal.style.display = 'block';
+        }
+    });
 
-function showMessage(id, message, type) {
-    const element = document.getElementById(id);
-    element.textContent = message;
-    element.className = `message ${type}`;
-}
+    // Apply Modal
+    window.openApplyModal = function(workshopId) {
+        document.getElementById('selectedWorkshopId').value = workshopId;
+        // Set workshop title based on ID
+        const titles = {
+            '1': 'Data Handling and Management',
+            '2': 'UI/UX Design',
+            '3': 'Web Development'
+        };
+        document.querySelector('#applyModal h2').textContent = `Apply for ${titles[workshopId] || 'Workshop'}`;
+        applyModal.style.display = 'flex';
+    };
 
-function loadAnnouncements() {
-    const container = document.getElementById('announcementList');
-    container.innerHTML = sampleAnnouncements.map(ann => `
-        <div class="announcement-item">
-            <h3>${ann.title}</h3>
-            <p><strong>Date:</strong> ${ann.date}</p>
-            <div style="font-size: 48px; margin-top: 15px;">${ann.image}</div>
-        </div>
-    `).join('');
-}
+    window.closeApplyModal = function() {
+        applyModal.style.display = 'none';
+        applyForm.reset();
+        document.getElementById('imagePreview').innerHTML = '';
+    };
 
-function loadWorkshops() {
-    const container = document.getElementById('workshopsGrid');
-    container.innerHTML = sampleWorkshops.map(workshop => `
-        <div class="workshop-card">
-            <div class="workshop-image">
-                <span style="font-size: 48px;">${workshop.image}</span>
-            </div>
-            <div class="workshop-content">
-                <h3 class="workshop-title">${workshop.title}</h3>
-                <div class="workshop-date">📅 Launch Date: ${workshop.date}</div>
-                <div class="workshop-fees">${workshop.fees}</div>
-                <button class="btn-apply" onclick="openApplyModal(${workshop.id}, '${workshop.title}')">
-                    Apply Now
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
+    // Apply Form
+    applyForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('workshopId', document.getElementById('selectedWorkshopId').value);
+        formData.append('workshopTitle', document.querySelector('#applyModal h2').textContent.replace('Apply for ', ''));
+        formData.append('name', document.getElementById('applyName').value);
+        formData.append('fatherName', document.getElementById('applyFatherName').value);
+        formData.append('phone', document.getElementById('applyPhone').value);
+        formData.append('email', document.getElementById('applyEmail').value);
+        formData.append('class', document.getElementById('applyClass').value);
+        formData.append('institute', document.getElementById('applyInstitute').value);
+        formData.append('userId', currentUser ? currentUser.email : 'demo');
+        const fileInput = document.getElementById('paymentScreenshot');
+        if (fileInput.files[0]) {
+            formData.append('paymentScreenshot', fileInput.files[0]);
+        }
 
-function openApplyModal(workshopId, workshopTitle) {
-    document.getElementById('selectedWorkshopId').value = workshopId;
-    document.querySelector('#applyModal h2').textContent = `Apply for ${workshopTitle}`;
-    document.getElementById('applyModal').style.display = 'block';
-    document.getElementById('applyName').value = currentUser?.name || '';
-    document.getElementById('applyEmail').value = currentUser?.email || '';
-}
-
-function closeApplyModal() {
-    document.getElementById('applyModal').style.display = 'none';
-    document.getElementById('applyForm').reset();
-}
-
-// Apply Form Submission
-document.getElementById('applyForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData();
-    formData.append('workshopId', document.getElementById('selectedWorkshopId').value);
-    formData.append('name', document.getElementById('applyName').value);
-    formData.append('fatherName', document.getElementById('applyFatherName').value);
-    formData.append('phone', document.getElementById('applyPhone').value);
-    formData.append('email', document.getElementById('applyEmail').value);
-    formData.append('class', document.getElementById('applyClass').value);
-    formData.append('institute', document.getElementById('applyInstitute').value);
-    formData.append('paymentScreenshot', document.getElementById('paymentScreenshot').files[0]);
-
-    try {
-        // Replace with your backend API
-        const response = await fetch('/api/applications', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            alert('Application submitted successfully!');
+        try {
+            const response = await fetch(`${API_BASE}/applications`, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            alert(result.message || 'Application submitted!');
             closeApplyModal();
-        } else {
-            alert('Error submitting application: ' + data.message);
+        } catch (error) {
+            alert('Application submitted in demo mode (backend optional).');
+            closeApplyModal();
         }
-    } catch (error) {
-        alert('Demo: Application submitted successfully!');
-        closeApplyModal();
-    }
-});
+    });
 
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('applyModal');
-    if (event.target == modal) {
-        closeApplyModal();
+    // Logout
+    window.logout = function() {
+        currentUser = null;
+        authSection.style.display = 'block';
+        mainPortal.style.display = 'none';
+        loginForm.reset();
+        registerForm.reset();
+        loginMessage.textContent = '';
+        registerMessage.textContent = '';
+        // Reset login tab
+        showLogin();
+    };
+
+    // Image preview
+    document.getElementById('paymentScreenshot').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" style="max-width:200px;max-height:200px;">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Close modal on outside click
+    window.onclick = function(event) {
+        if (event.target === applyModal) {
+            closeApplyModal();
+        }
+    };
+
+// Notification upload functionality
+    let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+    // Load notifications
+    function loadNotifications() {
+        const list = document.getElementById('announcementList');
+        list.innerHTML = notifications.map(notif => `
+            <div class="announcement-card">
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    ${notif.image ? `<img src="${notif.image}" alt="${notif.title}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">` : ''}
+                    <div>
+                        <h4>${notif.title}</h4>
+                        <p>${notif.desc}</p>
+                        <small style="color: var(--text-secondary);">Added by ${currentUser ? currentUser.name : 'Admin'}</small>
+                    </div>
+                </div>
+            </div>
+        `).join('') || '<p style="text-align: center; color: var(--text-secondary);">No announcements yet. Add one!</p>';
     }
-}
+
+    window.openNotificationModal = function() {
+        document.getElementById('notificationModal').style.display = 'flex';
+    };
+
+    window.closeNotificationModal = function() {
+        document.getElementById('notificationModal').style.display = 'none';
+        document.getElementById('notificationForm').reset();
+        document.getElementById('notifImagePreview').innerHTML = '';
+    };
+
+    // Notification form
+    document.getElementById('notificationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('title', document.getElementById('notifTitle').value);
+        formData.append('desc', document.getElementById('notifDesc').value);
+        if (document.getElementById('notifImage').files[0]) {
+            formData.append('image', document.getElementById('notifImage').files[0]);
+        }
+        formData.append('userId', currentUser ? currentUser.email : 'admin');
+
+        try {
+            const response = await fetch(`${API_BASE}/announcements`, {
+                method: 'POST',
+                body: formData
+            });
+            // Demo mode - store locally
+            const notif = {
+                id: Date.now(),
+                title: formData.get('title'),
+                desc: formData.get('desc'),
+                image: document.getElementById('notifImage').files[0] ? URL.createObjectURL(document.getElementById('notifImage').files[0]) : null,
+                userId: formData.get('userId'),
+                date: new Date().toLocaleString()
+            };
+            notifications.unshift(notif);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            loadNotifications();
+            closeNotificationModal();
+            alert('Announcement published!');
+        } catch (error) {
+            // Demo local storage
+            const notif = {
+                id: Date.now(),
+                title: document.getElementById('notifTitle').value,
+                desc: document.getElementById('notifDesc').value,
+                image: null,
+                userId: currentUser ? currentUser.email : 'demo',
+                date: new Date().toLocaleString()
+            };
+            notifications.unshift(notif);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            loadNotifications();
+            closeNotificationModal();
+            alert('Announcement added (demo mode)');
+        }
+    });
+
+    // Image preview for notification
+    document.getElementById('notifImage').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('notifImagePreview').innerHTML = `<img src="${e.target.result}" style="max-width:200px;max-height:200px;border-radius: var(--radius);">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Load initial notifications after login
+    loadNotifications();
+});
